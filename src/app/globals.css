@@ -39,17 +39,18 @@ label {
   @apply text-dark-200;
 }
 
-input {
+/* input {
   @apply w-full p-4 inset-shadow rounded-2xl focus:outline-none bg-white;
+} */
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
 }
 
-textarea {
-  @apply w-full p-4 inset-shadow rounded-2xl focus:outline-none bg-white;
-}
-
-form {
-  @apply flex flex-col items-start gap-8 w-full;
-}
 
 @layer components {
   .text-gradient {
