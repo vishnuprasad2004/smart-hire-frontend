@@ -11,11 +11,18 @@ const jura = Jura({
     weight: ["400", "500", "600", "700"],
 });
 
+interface Field {
+    name: string;
+    label: string;
+    type: string;
+    required: boolean;
+}
+
 export default function DynamicForm() {
 
     const param = useParams();
     console.log("Params:", param);
-    const formId = param.id;
+    const formId = param.id || "default-form-id"; // Fallback to a default ID if not present
     console.log("Form ID:", formId);
     const [form, setForm] = useState<any>(null);
     const [values, setValues] = useState<{ [key: string]: any }>({});
@@ -40,11 +47,17 @@ export default function DynamicForm() {
         alert("Response submitted ✅");
     };
 
-        if (!form) return (
-            <div className="place-items-center h-screen">
-                <p>Loading form...</p>
-            </div>
-        );
+    if(!param.id) return (
+        <div className="place-items-center h-screen">
+            <p>No form ID provided in the URL.</p>
+        </div>
+    );
+
+    if (!form) return (
+        <div className="place-items-center h-screen">
+            <p>Loading form...</p>
+        </div>
+    );
 
     return (
         <div className="flex flex-col items-center justify-center">
@@ -58,7 +71,7 @@ export default function DynamicForm() {
                 <h2 className="text-2xl font-bold text-black">{form.title}</h2>
                 <p className="text-gray-600 font-semibold mb-4 lg:w-[60ch]">{form.description}</p>
 
-                {form.fields.map((field: any) => (
+                {form.fields.map((field: Field) => (
                     <div key={field.name} className="flex flex-col">
                     <label className="font-medium mb-1">{field.label}</label>
                     {field.type === "text" || field.type === "email" || field.type === "number" || field.type === "url" ? (
