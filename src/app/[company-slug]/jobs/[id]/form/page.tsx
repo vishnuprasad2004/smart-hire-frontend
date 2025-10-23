@@ -61,13 +61,13 @@ export default function DynamicForm() {
     );
 
     if(notFound) {
-        <div>
+        <div className="flex justify-center items-center h-full w-full">
             <p>Job Not Found</p>
         </div>
     }
 
     if (!form) return (
-        <div className="place-items-center h-screen">
+        <div className="flex justify-center items-center h-screen">
             <p>Loading form...</p>
         </div>
     );

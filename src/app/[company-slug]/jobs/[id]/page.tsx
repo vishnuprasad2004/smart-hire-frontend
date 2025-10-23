@@ -45,13 +45,13 @@ export default function DynamicForm() {
     
     
     if (!formId) return (
-        <div className="place-items-center h-screen">
+        <div className={"flex justify-center items-center h-screen " + jura.className}>
             <p>Loading job...</p>
         </div>
     );
     
     if (!companyName) return (
-        <div className="place-items-center h-screen">
+        <div className={jura.className + " flex justify-center items-center h-screen"}>
             <p>Job not found</p>
         </div>
     );
