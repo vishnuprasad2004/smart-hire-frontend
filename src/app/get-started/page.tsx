@@ -1,6 +1,4 @@
-import Footer from '@/Components/Footer'
 import Page from '@/Components/layout/Page'
-import Navbar from '@/Components/NavBar'
 import React from 'react'
 
 function GetStarted() {

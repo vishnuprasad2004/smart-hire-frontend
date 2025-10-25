@@ -1,8 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
-import { FaLinkedin } from "react-icons/fa";
-import { MdEmail } from "react-icons/md";
+// import { FaLinkedin } from "react-icons/fa";
+// import { MdEmail } from "react-icons/md";
 
 function Footer() {
   return (
@@ -15,8 +15,8 @@ function Footer() {
             </Link>
           </div>
           <div className='flex flex-row gap-4 text-gray-300'>
-            <Link href="https://www.linkedin.com" className='flex items-center gap-1'><FaLinkedin/> LinkedIn</Link>
-            <Link href="mail:vishnuprasadkorada@gmail.com" className='flex items-center gap-1'><MdEmail/> Mail Us</Link>
+            {/* <Link href="https://www.linkedin.com" className='flex items-center gap-1'><FaLinkedin/> LinkedIn</Link>
+            <Link href="mail:vishnuprasadkorada@gmail.com" className='flex items-center gap-1'><MdEmail/> Mail Us</Link> */}
             
           </div>
           <p>© {new Date().getFullYear()} SmartHire, Inc.</p>
