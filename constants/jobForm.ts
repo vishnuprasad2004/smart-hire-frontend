@@ -2,26 +2,29 @@ const sampleJobForms = [{
     company_name: "KPMG India Services LLP",
     company_slug: "kpmg",
     public_id: "1",
+    updated_at: "2024-10-01",
+    total_responses: 12,
+    team: "Digital Product Dev Team",
     title: "Software Engineer Application",
     description: `
-
-**Location:** Hyderabad, India
-**Employment Type:** Full-time
-
----
-
-### **About the Role**
-
-We are looking for a passionate and motivated Associate Software Development Engineer (ASDE) to join our engineering team. In this role, you will work alongside senior engineers to design, develop, and maintain high-quality software solutions. You will gain hands-on experience with the full software development lifecycle, contribute to solving real-world problems, and help deliver scalable, reliable, and efficient applications.
-
----
-
-### **Key Responsibilities**
-
-* Collaborate with senior engineers and product managers to design, develop, test, and deploy software solutions.
-* Write clean, efficient, and maintainable code following best practices.
-* Participate in code reviews and contribute to improving coding standards.
-* Debug and troubleshoot issues across different environments.
+    
+    **Location:** Hyderabad, India
+    **Employment Type:** Full-time
+    
+    ---
+    
+    ### **About the Role**
+    
+    We are looking for a passionate and motivated Associate Software Development Engineer (ASDE) to join our engineering team. In this role, you will work alongside senior engineers to design, develop, and maintain high-quality software solutions. You will gain hands-on experience with the full software development lifecycle, contribute to solving real-world problems, and help deliver scalable, reliable, and efficient applications.
+    
+    ---
+    
+    ### **Key Responsibilities**
+    
+    * Collaborate with senior engineers and product managers to design, develop, test, and deploy software solutions.
+    * Write clean, efficient, and maintainable code following best practices.
+    * Participate in code reviews and contribute to improving coding standards.
+    * Debug and troubleshoot issues across different environments.
 * Assist in the design and development of scalable system architectures.
 * Stay updated with emerging technologies and contribute to innovation within the team.
 * Write unit tests and ensure software quality through automated testing.
@@ -57,24 +60,27 @@ We are looking for a passionate and motivated Associate Software Development Eng
 
 ---
 `,
-    fields: [
-        { name: "first_name", label: "First Name", type: "text", required: true },
-        { name: "last_name", label: "Last Name", type: "text", required: true },
-        { name: "email", label: "Email", type: "email", required: true },
-        { name: "resume", label: "Upload Resume", type: "file", required: true },
-        {
-            name: "experience",
-            label: "Years of Experience",
-            type: "number",
-            required: false,
-        },
-        { name: "portfolio", label: "Portfolio URL", type: "url", required: false },
-    ],
+fields: [
+    { name: "first_name", label: "First Name", type: "text", required: true },
+    { name: "last_name", label: "Last Name", type: "text", required: true },
+    { name: "email", label: "Email", type: "email", required: true },
+    { name: "resume", label: "Upload Resume", type: "file", required: true },
+    {
+        name: "experience",
+        label: "Years of Experience",
+        type: "number",
+        required: false,
+    },
+    { name: "portfolio", label: "Portfolio URL", type: "url", required: false },
+],
 },
 {
     company_name: "ServiceNow India Pvt Ltd",
     company_slug: "servicenow",
+    updated_at: "2024-10-01",
     public_id: "2",
+    total_responses: 32,
+    team: "Engineering Team",
     title: "Software Engineer Intern",
     description: `
 
