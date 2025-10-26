@@ -2,11 +2,9 @@
 
 import FormCard from "@/Components/FormCard";
 import { Jura } from "next/font/google";
-import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import React from "react";
-import sampleJobForms from "../../../../../constants/jobForm";
+import React, { useCallback, useEffect } from "react";
 import { CirclePlus } from "lucide-react";
 
 const jura = Jura({
@@ -18,6 +16,27 @@ const jura = Jura({
 function AllForms() {
   const param = useParams();
   const companySlug = param["company-slug"];
+
+	const [forms, setForms] = React.useState<any[]>([]);
+
+	const fetchForms = useCallback( async () => {
+		// Fetch forms from API if needed
+		try {
+			const response = await fetch(`/api/forms?company=${companySlug}`);
+			if (!response.ok) {
+				console.error("API Error:", response.status, await response.text());
+				return;
+			}
+			const data = await response.json();
+			setForms(data);
+		} catch (error) {
+			console.error("Error fetching forms:", error);
+		}
+	}, [companySlug]);
+
+	useEffect(() => {
+		fetchForms();
+	},[companySlug]);
 
   return (
     <>
@@ -40,15 +59,15 @@ function AllForms() {
           </Link>
           <div className="border-b m-3 border-neutral-300"></div>
           <div className="grid grid-cols-2 gap-5 mt-4 pr-4 w-3/4 m-auto">
-            {sampleJobForms.map((item) => (
+            {forms.map((item) => (
               <FormCard
-								key={item.public_id}
-                id={item.public_id}
+								key={item.id}
+                id={item.id}
                 name={item.title}
-                last_edited={item.updated_at}
-                total_responses={item.total_responses}
+                last_edited={item.updatedAt}
+                total_responses={item.totalResponses}
                 team={item.team}
-                company_slug={item.company_slug}
+                company_slug={companySlug as string}
               />
             ))}
           </div>

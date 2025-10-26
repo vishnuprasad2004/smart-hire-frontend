@@ -29,7 +29,7 @@ function FormCard({id, name, last_edited, total_responses, team, company_slug}: 
     try {
       await navigator.clipboard.writeText(text);
       toast("Link copied to clipboard!", { position: "bottom-right"});
-      modalOpen && setModalOpen(false);
+      if(modalOpen) setModalOpen(false);
     } catch (err) {
       alert("Failed to copy link.");
     }

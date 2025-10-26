@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import sampleJobForm from "../../../../../../constants/jobForm";
+import { useState, useEffect, useCallback } from "react";
 import { useParams } from "next/navigation";
 import { Jura } from "next/font/google";
+import { useDropzone } from "react-dropzone";
 
 const jura = Jura({
     variable: "--font-jura",
@@ -12,6 +12,8 @@ const jura = Jura({
 });
 
 interface Field {
+    id: string;
+    formId: string;
     name: string;
     label: string;
     type: string;
@@ -22,23 +24,40 @@ export default function DynamicForm() {
 
     const param = useParams();
 
-    const formId = param.id || "default-form-id"; // Fallback to a default ID if not present
-    const companySlug = param["company-slug"] || "default-form-id"; // Fallback to a default ID if not present
+    const formId = param["id"]; // Fallback to a default ID if not present
+    const companySlug = param["company-slug"]; // Fallback to a default ID if not present
     // console.log("Form ID:", formId);
     const [form, setForm] = useState<any>(null);
     const [values, setValues] = useState<{ [key: string]: any }>({});
     const [notFound, setNotFound] = useState(false);
 
-    useEffect(() => {
-        const jobForm = sampleJobForm.find(job => job.company_slug === companySlug && job.public_id === formId);
-        if (jobForm) {
-            setForm(jobForm);
-        } else {
+    const fetchForm = useCallback( async () => {
+        try {
+            const response = await fetch(`/api/form?company=${companySlug as string}&id=${formId as string}`);
+            if (response.status === 404) {
+                setNotFound(true);
+                return;
+            }
+            const data = await response.json();
+            setForm(data.data); // Ensure fields is always an array
+            console.log("Fetched form:", data);
+        } catch (error) {
+            console.error("Error fetching form:", error);
             setNotFound(true);
-            setForm(null);
+            return;
         }
-        
-    }, [formId]);
+    }, [companySlug]);
+
+
+    useEffect(() => {
+        // fetch JSON form structure from API
+        fetchForm();
+    }, [fetchForm]);
+
+    const onDrop = useCallback((acceptedFiles:any) => {
+    // Do something with the files
+  }, [])
+  const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
 
     const handleChange = (name: string, value: any) => {
         setValues(prev => ({ ...prev, [name]: value }));
@@ -93,9 +112,9 @@ export default function DynamicForm() {
                 <h2 className="text-2xl font-bold text-black">{form.title}</h2>
                 {/* <p className="text-gray-600 font-semibold mb-4 lg:w-[60ch]">{form.description}</p> */}
 
-                {form.fields.map((field: Field) => (
+                {form && form?.fields?.map((field: Field) => (
                     <div key={field.name} className="flex flex-col">
-                    <label className="font-medium mb-1">{field.label}</label>
+                    <label className={jura.className + " font-medium text-sm mb-1"}>{field.label}</label>
                     {field.type === "text" || field.type === "email" || field.type === "number" || field.type === "url" ? (
                         <input
                         type={field.type}
@@ -107,15 +126,23 @@ export default function DynamicForm() {
                         onChange={(e) => handleChange(field.name, e.target.value)}
                         />
                     ) : field.type === "file" ? (
-                        <input
-                        type="file"
-                        required={field.required}
-                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm 
-                            file:border-0 file:bg-transparent file:text-sm file:font-medium 
-                            file:text-primary focus-visible:outline-none focus-visible:ring-2 
-                            focus-visible:ring-ring focus-visible:ring-offset-2"
-                        onChange={(e) => handleChange(field.name, e.target.files?.[0])}
-                        />
+                        <div {...getRootProps()} className="h-18 bg-neutral-200 rounded-md border border-input px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium ">
+                            <input {...getInputProps()} required={field.required} />
+                            {
+                                isDragActive ?
+                                <p>Drop the files here ...</p> :
+                                <p>Drag &apos;n&apos; drop some files here, or click to select files</p>
+                            }
+                        </div>
+                        // <input
+                        // type="file"
+                        // required={field.required}
+                        // className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm 
+                        //     file:border-0 file:bg-transparent file:text-sm file:font-medium 
+                        //     file:text-primary focus-visible:outline-none focus-visible:ring-2 
+                        //     focus-visible:ring-ring focus-visible:ring-offset-2"
+                        // onChange={(e) => handleChange(field.name, e.target.files?.[0])}
+                        // />
                     ) : field.type === "textarea" ? (
                         <textarea
                         required={field.required}

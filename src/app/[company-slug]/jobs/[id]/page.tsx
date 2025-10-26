@@ -40,7 +40,7 @@ export default function DynamicForm() {
             setJobDescription("");
         }
 
-    }, [formId]);
+    }, [formId, companySlug]);
 
     
     
