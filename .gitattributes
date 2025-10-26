@@ -1,0 +1,6 @@
+# Tell GitHub to count only these
+src/* linguist-detectable=true
+
+# Ignore config and JS-based setups
+*.mjs linguist-vendored
+*.js linguist-vendored
