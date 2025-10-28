@@ -1,12 +1,18 @@
 "use client";
 import Footer from "@/Components/Footer";
 import Navbar from "@/Components/NavBar";
-import { Jura } from "next/font/google";
+import { Inter, Jura } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
 
 const jura = Jura({
 	variable: "--font-jura",
+	subsets: ["latin"],
+	weight: ["400", "500", "600", "700"],
+});
+
+const inter = Inter({
+	variable: "--font-inter",
 	subsets: ["latin"],
 	weight: ["400", "500", "600", "700"],
 });
@@ -27,8 +33,8 @@ export default function Home() {
 					<p className={jura.className + " font-black text-xl lg:text-6xl"}>Smarter Hiring, Fairer Decisions.</p>
 					<p className={jura.className + " font-bold "}>SmartHIRE uses AI to match resumes with job descriptions - ensuring faster, unbiased, and explainable candidate screening.</p>
 					<div className="flex flex-row justify-center items-center gap-4 mt-4">
-						<Link href="/get-started" className="rounded-full bg-[#091236] text-white px-6 p-2 w-fit">Get Started</Link>
-						<Link href="#learn-more" className="secondary-button w-fit">Learn More</Link>
+						<Link href="/get-started" className={inter.className +" rounded-full bg-[#091236] text-white px-6 p-2 w-fit"}>Get Started</Link>
+						<Link href="/login" className={inter.className + " secondary-button w-fit"}>Login</Link>
 					</div>
 				</div>
 			</section>

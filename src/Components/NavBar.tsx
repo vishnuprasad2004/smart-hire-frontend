@@ -1,4 +1,5 @@
 "use client";
+import { Github } from "lucide-react";
 import { Jura } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,8 +21,8 @@ const Navbar = () => {
             </Link>
             <div className="flex-row gap-4 lg:flex hidden">
                 <Link href="/about" className="text-gray-900 font-semibold hover:text-gray-900">About</Link>
-                <Link href="/docs" className="text-gray-900 font-semibold hover:text-gray-900">Docs</Link>
-                <Link href="#contact" className="text-gray-900 font-semibold hover:text-gray-900">Contact</Link>
+                {/* <Link href="/docs" className="text-gray-900 font-semibold hover:text-gray-900">Github</Link> */}
+                <Link href="#contact" className="flex gap-1 items-center text-gray-900 font-semibold hover:text-gray-900"><Github size={20}/>Github</Link>
             </div>
             <Link href="/get-started" className="primary-button py-1 w-fit">Get Started</Link>
         </nav>

@@ -46,7 +46,7 @@ export default function DynamicForm() {
             setNotFound(true);
             return;
         }
-    }, [companySlug]);
+    }, [formId, companySlug]);
 
 
     useEffect(() => {

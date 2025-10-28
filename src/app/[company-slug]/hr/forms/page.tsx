@@ -18,10 +18,13 @@ function AllForms() {
   const companySlug = param["company-slug"];
 
 	const [forms, setForms] = React.useState<any[]>([]);
+  const [companyName, setCompanyName] = React.useState<string>("");
+  const [loading, setLoading] = React.useState<boolean>(false);
 
 	const fetchForms = useCallback( async () => {
 		// Fetch forms from API if needed
 		try {
+      setLoading(true);
 			const response = await fetch(`/api/forms?company=${companySlug}`);
 			if (!response.ok) {
 				console.error("API Error:", response.status, await response.text());
@@ -29,19 +32,22 @@ function AllForms() {
 			}
 			const data = await response.json();
 			setForms(data);
+      setCompanyName(data[0]?.companyName || ""); // Assuming all forms belong to the same company
 		} catch (error) {
 			console.error("Error fetching forms:", error);
-		}
+		} finally {
+      setLoading(false);
+    }
 	}, [companySlug]);
 
 	useEffect(() => {
 		fetchForms();
-	},[companySlug]);
+	},[fetchForms, companySlug]);
 
   return (
     <>
       <nav className="flex flex-row justify-center items-center w-full font-bold border-b border-gray-200 z-50 bg-white/50 p-2 fixed top-0 border-1">
-        <p className={jura.className + " font-bold"}>{companySlug}</p>
+        <p className={jura.className + " font-bold"}>{companyName}</p>
       </nav>
       <main className="mt-15 ml-12">
         <div className="h-screen fixed left-0 top-0 w-[2%] hidden lg:block">
@@ -59,6 +65,14 @@ function AllForms() {
           </Link>
           <div className="border-b m-3 border-neutral-300"></div>
           <div className="grid grid-cols-2 gap-5 mt-4 pr-4 w-3/4 m-auto">
+            {
+              loading && (
+              <div className="space-y-4 p-6">
+                {[...Array(1)].map((_, i) => (
+                    <div key={i} className="h-32 bg-gray-200 rounded animate-pulse"></div>
+                ))}
+              </div>)
+            }
             {forms.map((item) => (
               <FormCard
 								key={item.id}

@@ -24,6 +24,18 @@ function FormCard({id, name, last_edited, total_responses, team, company_slug}: 
   const [modalOpen, setModalOpen] = useState(false);
   const router = useRouter();
 
+  function formatDate(dateString: string) {
+    const date = new Date(dateString);
+
+    return date.toLocaleString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+  }
 
   const copytoClipboard = async (text: string) => {
     try {
@@ -45,7 +57,7 @@ function FormCard({id, name, last_edited, total_responses, team, company_slug}: 
         {/* content */}
         <div>
           <p className='font-bold text-lg'>{name}</p>
-          <p className='text-sm text-neutral-600'>Last Edited: {last_edited}</p>
+          <p className='text-sm text-neutral-600'>Last Edited: {formatDate(last_edited)}</p>
           <p className='text-sm text-neutral-600'>Total Responses: {total_responses}</p>
           <p className='text-sm text-neutral-600'>Team: {team}</p>
         </div>
@@ -81,7 +93,7 @@ function FormCard({id, name, last_edited, total_responses, team, company_slug}: 
             <button className="w-full text-left my-1 py-2 px-3 rounded hover:bg-gray-100 flex flex-row gap-2 cursor-pointer">
               <Pencil/> <p>Edit</p>
             </button>
-            <button className="w-full text-left my-1 py-2 px-3 rounded hover:bg-gray-100 flex flex-row gap-2 cursor-pointer" onClick={() => copytoClipboard(`${window!.location.origin}/${company_slug}/jobs/${id}/form`)}>
+            <button className="w-full text-left my-1 py-2 px-3 rounded hover:bg-gray-100 flex flex-row gap-2 cursor-pointer" onClick={() => copytoClipboard(`${window!.location.origin}/${company_slug}/jobs/${id}/`)}>
               <Copy/><p>Copy Link</p>
             </button>
             <button className="w-full text-left my-1 py-2 px-3 rounded hover:bg-gray-100 flex flex-row gap-2 cursor-pointer"  onClick={() => {router.push(`/${company_slug}/hr/forms/${id}/responses`)}}>

@@ -21,17 +21,24 @@ export async function GET(req: Request) {
     const companyId = company[0].id;
 
     // Get all forms for this company
-    const formsList = await db.select().from(form).where(eq(form.companyId, companyId));
-
-    // Fetch fields for each form
-    const formsWithFields = await Promise.all(
-      formsList.map(async (f) => {
-        const fields = await db.select().from(jobFields).where(eq(jobFields.formId, f.id));
-        return { ...f, fields };
+    const formsList = await db
+      .select({
+        companyId: form.companyId,
+        id: form.id,
+        title: form.title,
+        location: form.location,
+        employmentType: form.employmentType,
+        totalResponses: form.totalResponses,
+        companyName: companies.name,
+        team: form.team,
+        updatedAt: form.updatedAt,
       })
-    );
+      .from(form)
+      .innerJoin(companies, eq(form.companyId, companies.id))
+      .where(eq(form.companyId, companyId));
 
-    return NextResponse.json(formsWithFields);
+
+    return NextResponse.json(formsList);
   } catch (err) {
     console.error(err);
     return NextResponse.json({ error: "Failed to fetch forms" }, { status: 500 });

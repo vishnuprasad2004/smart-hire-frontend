@@ -6,6 +6,8 @@ export const companies = pgTable('companies', {
   name: text('name').notNull(),
   slug: text('slug').unique().notNull(),
   description: text('description'),
+  email: text('email').unique().notNull(),
+  password: text('password').notNull(), // Store hashed passwords
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
 });

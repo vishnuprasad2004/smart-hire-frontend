@@ -1,7 +1,6 @@
-// src/app/api/form/route.ts
 import { db } from "@/lib/db";
 import { form, jobFields, companies } from "@/lib/schema";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
@@ -11,35 +10,43 @@ export async function GET(req: Request) {
     const formId = searchParams.get("id");
 
     if (!companySlug) {
-      console.error("Missing company slug");
-      return;
+      return NextResponse.json({ error: "Missing company slug" }, { status: 400 });
     }
 
     if (!formId) {
-      console.error("Missing form id");
-      return;
+      return NextResponse.json({ error: "Missing form id" }, { status: 400 });
     }
 
-    // Get the company ID
-    const company = await db.select().from(companies).where(eq(companies.slug, companySlug));
-    if (!company.length) return NextResponse.json({ error: "Company not found" }, { status: 404 });
-
-    const companyId = company[0].id;
-
-    // Get all forms for this company
-    const jobForm = await db.select().from(form).where(eq(form.companyId, companyId) && eq(form.id, formId));
-
-    // Fetch fields for each form
-    const formsWithFields = await Promise.all(
-      jobForm.map(async (f) => {
-        const fields = await db.select().from(jobFields).where(eq(jobFields.formId, f.id));
-        return { ...f, fields };
+    // Join form and companies tables
+    const joinedData = await db
+      .select({
+        id: form.id,
+        title: form.title,
+        description: form.description,
+        location: form.location,
+        employmentType: form.employmentType,
+        companyName: companies.name,
+        companyId: form.companyId,
       })
-    );
+      .from(form)
+      .innerJoin(companies, eq(form.companyId, companies.id))
+      .where(and(eq(companies.slug, companySlug), eq(form.id, formId)));
 
-    return NextResponse.json({message: "Successfully fetched the data", data: formsWithFields[0]});
+    if (!joinedData.length) {
+      return NextResponse.json({ error: "Form not found" }, { status: 404 });
+    }
+
+    const selectedForm = joinedData[0];
+
+    // Fetch fields for this form
+    const fields = await db.select().from(jobFields).where(eq(jobFields.formId, selectedForm.id));
+
+    return NextResponse.json({
+      message: "Successfully fetched the data",
+      data: { ...selectedForm, fields },
+    });
   } catch (err) {
     console.error(err);
-    return NextResponse.json({ message: "Failed to fetch forms", data: null }, { status: 500 });
+    return NextResponse.json({ message: "Failed to fetch form", data: null }, { status: 500 });
   }
 }
