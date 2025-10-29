@@ -16,7 +16,7 @@ function Login() {
 		event.preventDefault();
 		try { 
 			setLoading(true);
-			const res = await axios.post("/api/login", { email, password }, {withCredentials: true, headers: { "Content-Type": "application/json" },});
+			const res = await axios.post("/api/auth/login", { email, password }, {withCredentials: true, headers: { "Content-Type": "application/json" },});
 			const data = res.data
 			console.log(data);
 			if(data.message === "Login successful") {

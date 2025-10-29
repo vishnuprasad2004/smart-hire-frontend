@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { Jura } from "next/font/google";
 import Markdown from "react-markdown";
 import Link from "next/link";
+import toast, { Toaster } from "react-hot-toast";
 
 const jura = Jura({
   variable: "--font-jura",
@@ -21,6 +22,8 @@ export default function DynamicForm() {
   const [companyName, setCompanyName] = useState<string | null>(null);
   const [jobTitle, setJobTitle] = useState<string | null>(null);
   const [jobDescription, setJobDescription] = useState<string | null>(null);
+  const [location, setLocation] = useState<string | null>(null);
+  const [employmentType, setEmploymentType] = useState<string | null>(null);
   const [notFound, setNotFound] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -38,6 +41,8 @@ export default function DynamicForm() {
       setJobTitle(data.data.title as string);
       setJobDescription(data.data.description as string);
       setCompanyName(data.data.companyName as string);
+      setLocation(data.data.location as string);
+      setEmploymentType(data.data.employmentType as string);
       console.log("Fetched form:", data);
     } catch (error) {
       console.error("Error fetching form:", error);
@@ -90,10 +95,18 @@ export default function DynamicForm() {
       </div>
 
       <main className="mb-10 mt-20">
-        <div className="lg:w-[70ch]">
+        <div className="lg:w-[70ch] p-5 border-2 border-[#b8b8b8] rounded-lg box-shadow">
           <p className={jura.className + " font-bold text-4xl mb-6"}>
             {jobTitle}
           </p>
+          {!loading && <div className="flex flex-row gap-2">
+            <p className={jura.className + " font-bold text-md mb-6 px-2 py-1 bg-neutral-200 inline-block rounded"}>
+              {location}
+            </p>
+            <p className={jura.className + " font-bold text-md mb-6 px-2 py-1 bg-neutral-200 inline-block rounded"}>
+              {employmentType}
+            </p>
+          </div>}
           {loading ? (
             <div className="space-y-4 p-6">
               {[...Array(2)].map((_, i) => (
@@ -114,7 +127,18 @@ export default function DynamicForm() {
               Apply Now
             </button>
           </Link>
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(window!.location.href);
+                toast.success("Link copied to clipboard!");
+              }}
+              type="button"
+              className=" mt-5 ml-3 px-16 py-1 border border-[#091236] rounded-md"
+            >
+              Share
+            </button>
         </div>
+        <Toaster/>
       </main>
 
       <footer>

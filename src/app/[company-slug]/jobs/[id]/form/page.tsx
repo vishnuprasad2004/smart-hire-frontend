@@ -30,9 +30,12 @@ export default function DynamicForm() {
     const [form, setForm] = useState<any>(null);
     const [values, setValues] = useState<{ [key: string]: any }>({});
     const [notFound, setNotFound] = useState(false);
+    const [companyName, setCompanyName] = useState<string>("");
+    const [loading, setLoading] = useState(false);
 
     const fetchForm = useCallback( async () => {
         try {
+            setLoading(true);
             const response = await fetch(`/api/form?company=${companySlug as string}&id=${formId as string}`);
             if (response.status === 404) {
                 setNotFound(true);
@@ -40,11 +43,14 @@ export default function DynamicForm() {
             }
             const data = await response.json();
             setForm(data.data); // Ensure fields is always an array
+            setCompanyName(data.data.companyName as string);
             console.log("Fetched form:", data);
         } catch (error) {
             console.error("Error fetching form:", error);
             setNotFound(true);
             return;
+        } finally {
+            setLoading(false);
         }
     }, [formId, companySlug]);
 
@@ -96,8 +102,8 @@ export default function DynamicForm() {
     return (
         <div className="flex flex-col items-center justify-center">
             <nav className="flex flex-row justify-center items-center w-full font-bold border-b border-gray-200 z-50 bg-white/50 p-2 fixed top-0 border-1">
-                {form.company_name && (
-                <p className={jura.className + " font-bold"}>{form.company_name}</p>
+                {companyName && (
+                <p className={jura.className + " font-bold"}>{companyName || "lol"}</p>
                 )}
             </nav>
 
@@ -107,14 +113,20 @@ export default function DynamicForm() {
                 <div className="bg-[#091037] w-full h-[10vh]"></div>
             </div>
 
-            <br /><br />
-            <form onSubmit={handleSubmit} className="space-y-4 p-4 flex flex-1 flex-col lg:w-[60ch] ">
-                <h2 className="text-2xl font-bold text-black">{form.title}</h2>
-                {/* <p className="text-gray-600 font-semibold mb-4 lg:w-[60ch]">{form.description}</p> */}
+            <form onSubmit={handleSubmit} className="space-y-4 p-6 flex flex-1 flex-col lg:w-[75ch] border border-[#b8b8b8] box-shadow rounded-lg mt-24">
+                <h2 className={jura.className + " text-2xl font-bold text-black"}>{form?.title}</h2>
+                {!loading && <div className="flex flex-row gap-2">
+                    <p className={jura.className + " font-bold text-md mb-6 px-2 py-1 bg-neutral-200 inline-block rounded"}>
+                    {form?.location}
+                    </p>
+                    <p className={jura.className + " font-bold text-md mb-6 px-2 py-1 bg-neutral-200 inline-block rounded"}>
+                    {form?.employmentType}
+                    </p>
+                </div>}
 
                 {form && form?.fields?.map((field: Field) => (
                     <div key={field.name} className="flex flex-col">
-                    <label className={jura.className + " font-medium text-sm mb-1"}>{field.label}</label>
+                    <label className={jura.className + " font-bold text-sm mb-1"}>{field.label}</label>
                     {field.type === "text" || field.type === "email" || field.type === "number" || field.type === "url" ? (
                         <input
                         type={field.type}
@@ -126,12 +138,12 @@ export default function DynamicForm() {
                         onChange={(e) => handleChange(field.name, e.target.value)}
                         />
                     ) : field.type === "file" ? (
-                        <div {...getRootProps()} className="h-18 bg-neutral-200 rounded-md border border-input px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium ">
+                        <div {...getRootProps()} className="h-18 bg-[#5D8DE3]/10 flex justify-center items-center rounded-md border border-input px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium ">
                             <input {...getInputProps()} required={field.required} />
                             {
                                 isDragActive ?
-                                <p>Drop the files here ...</p> :
-                                <p>Drag &apos;n&apos; drop some files here, or click to select files</p>
+                                <p className={jura.className + ""}>Drop the files here ...</p> :
+                                <p className={jura.className + "  font-bold"}>Drag &apos;n&apos; drop some files here, or click to select files</p>
                             }
                         </div>
                         // <input
@@ -161,7 +173,7 @@ export default function DynamicForm() {
                 </button>
             </form>
             <footer>
-                <p className={"text-center text-sm text-gray-500 mb-4 " + jura.className}>© {new Date().getFullYear()} SmartHire Inc. All rights reserved.</p>
+                <p className={"text-center text-sm text-gray-500 mb-4 mt-10 " + jura.className}>© {new Date().getFullYear()} SmartHire Inc. All rights reserved.</p>
             </footer>
         </div>
   );

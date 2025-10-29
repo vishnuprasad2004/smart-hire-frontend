@@ -1,5 +1,6 @@
 "use client";
 import { Copy, Ellipsis, Info, Pencil, SquareMenu, Star, Trash, X } from 'lucide-react';
+import { Jura } from 'next/font/google';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
@@ -13,11 +14,18 @@ interface FormCardProps {
   total_responses: number;
   team: string;
   company_slug: string;
-
+  description: string;
 }
 
 
-function FormCard({id, name, last_edited, total_responses, team, company_slug}: FormCardProps) {
+const jura = Jura({
+  variable: "--font-jura",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
+
+function FormCard({id, name, last_edited, total_responses, team, company_slug, description}: FormCardProps) {
 
 
   const [loading, setLoading] = useState(false);
@@ -51,15 +59,17 @@ function FormCard({id, name, last_edited, total_responses, team, company_slug}: 
 
   return (
 
-    <div className='rounded-xl border-2 p-1  border-neutral-500 flex flex-row justify-between gap-6'>
+    <div className='rounded-xl border-2 p-1  border-neutral-500/30 flex flex-row justify-between gap-6 box-shadow'>
       <div className='flex flex-row items-center'>
-        <Image src={"/images/form_card_icon.png"} alt='' width={120} height={120}/>
+        <Image src={"/images/form_card_icon.jpg"} alt='' width={150} height={150}/>
         {/* content */}
         <div>
-          <p className='font-bold text-lg'>{name}</p>
-          <p className='text-sm text-neutral-600'>Last Edited: {formatDate(last_edited)}</p>
+          <p className={jura.className + ' text-neutral-600 font-black text-sm'}>Job Details</p>
+          <p className={jura.className + ' font-black text-2xl'}>{name}</p>
+          <span className='text-[12px] my-2 text-neutral-600 rounded-md px-2 p-1 border border-[#8e5243] bg-[#FF967C]/40'>{team}</span>
+          <p className='text-[12px] text-neutral-400'>{description.slice(0,150).replaceAll("#", "").replaceAll("*","").replaceAll("-","") + " ..."}</p>
           <p className='text-sm text-neutral-600'>Total Responses: {total_responses}</p>
-          <p className='text-sm text-neutral-600'>Team: {team}</p>
+          <p className='text-sm text-neutral-600'>Last Edited: {formatDate(last_edited)}</p>
         </div>
       </div>
       {/* tool panel chip */}

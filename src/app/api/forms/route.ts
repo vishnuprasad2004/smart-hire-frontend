@@ -1,7 +1,7 @@
 // src/app/api/forms/route.ts
 import { db } from "@/lib/db";
 import { form, jobFields, companies } from "@/lib/schema";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
@@ -27,6 +27,7 @@ export async function GET(req: Request) {
         id: form.id,
         title: form.title,
         location: form.location,
+        description: form.description,
         employmentType: form.employmentType,
         totalResponses: form.totalResponses,
         companyName: companies.name,

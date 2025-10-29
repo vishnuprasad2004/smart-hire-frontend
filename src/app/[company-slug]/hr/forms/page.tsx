@@ -3,9 +3,9 @@
 import FormCard from "@/Components/FormCard";
 import { Jura } from "next/font/google";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useCallback, useEffect } from "react";
-import { CirclePlus } from "lucide-react";
+import { CirclePlus, Settings } from "lucide-react";
 
 const jura = Jura({
   variable: "--font-jura",
@@ -17,9 +17,11 @@ function AllForms() {
   const param = useParams();
   const companySlug = param["company-slug"];
 
+  const router = useRouter();
 	const [forms, setForms] = React.useState<any[]>([]);
   const [companyName, setCompanyName] = React.useState<string>("");
   const [loading, setLoading] = React.useState<boolean>(false);
+  const [showSettings, setShowSettings] = React.useState<boolean>(false);
 
 	const fetchForms = useCallback( async () => {
 		// Fetch forms from API if needed
@@ -39,6 +41,22 @@ function AllForms() {
       setLoading(false);
     }
 	}, [companySlug]);
+
+  const handleLogout = async () => {
+    try{ 
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: {}
+      });
+      if (response.ok) {
+        router.push('/login');
+      } else {
+        console.log('Logout failed');
+      }
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  };
 
 	useEffect(() => {
 		fetchForms();
@@ -64,7 +82,7 @@ function AllForms() {
             </div>
           </Link>
           <div className="border-b m-3 border-neutral-300"></div>
-          <div className="grid grid-cols-2 gap-5 mt-4 pr-4 w-3/4 m-auto">
+          <div className="grid grid-cols-2 gap-5 mt-4 pr-4 w-5/6 m-auto">
             {
               loading && (
               <div className="space-y-4 p-6">
@@ -82,8 +100,20 @@ function AllForms() {
                 total_responses={item.totalResponses}
                 team={item.team}
                 company_slug={companySlug as string}
+                description={item.description}
               />
             ))}
+          </div>
+          {
+            showSettings && (<div className="absolute bottom-14 duration-300 right-5 mb-2 p-4 w-48 h-32 bg-white border border-gray-300 rounded-xl shadow-lg">
+              <p className={jura.className + " font-bold text-xl mb-2"}>Settings</p>
+              <button className="w-full bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600" onClick={handleLogout}>
+                Logout
+              </button>
+            </div>)
+          }
+          <div className="absolute bottom-5 right-5">
+            <Settings className="active:rotate-45 duration-300" onClick={() => setShowSettings(!showSettings)}/>
           </div>
         </div>
       </main>
