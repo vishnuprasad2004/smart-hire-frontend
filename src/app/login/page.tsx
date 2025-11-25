@@ -1,9 +1,16 @@
 "use client";
 import axios from "axios";
+import { Jura } from "next/font/google";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
+
+const jura = Jura({
+  variable: "--font-jura",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
 
 function Login() {
 

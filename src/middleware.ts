@@ -9,7 +9,7 @@ export async function middleware(req: NextRequest) {
   try {
     const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
     const { payload } = await jwtVerify(token, secret);
-    console.log("Decoded:", payload);
+    // console.log("Decoded:", payload);
 
     const url = new URL(req.url);
     const pathParts = url.pathname.split("/");
