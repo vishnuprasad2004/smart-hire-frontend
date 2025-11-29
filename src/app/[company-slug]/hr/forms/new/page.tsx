@@ -1,9 +1,10 @@
 "use client";
 
+import axios from "axios";
 import { Info } from "lucide-react";
 import { Jura } from "next/font/google";
 import Image from "next/image";
-import { useParams } from "next/navigation";
+import { redirect, RedirectType, useParams } from "next/navigation";
 import { useState } from "react";
 import Markdown from "react-markdown";
 
@@ -23,6 +24,8 @@ interface Field {
 export default function FormBuilder() {
 
   const param = useParams();
+
+  // console.log(param["company-slug"]);
 
   const [title, setTitle] = useState("");
   const [employmentType, setEmploymentType] = useState("");
@@ -59,20 +62,21 @@ export default function FormBuilder() {
     e.preventDefault();
     try {
       setLoading(true);
-      const formStructure = { title, fields };
-
-      await fetch("/api/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formStructure),
-      });
-      console.log("Form Structure:", formStructure);
+      const res = await axios.post("/api/create", { companySlug: param["company-slug"], title, description, fields: JSON.stringify(fields), location, employmentType, team },
+      { headers: {"Content-Type": "application/json"} }
+      );
       alert("Form saved ✅");
       setTitle("");
       setFields([]);
-
+      setDescription("");
+      setLocation("");
+      setEmploymentType("");
+      setTeam("");
+      redirect(`/${param["company-slug"]}/hr/forms`);
+      
     } catch (error) {
-
+      console.error("Error submitting form:", error);
+      alert("Error submitting form");
     } finally {
       setLoading(false);
     }

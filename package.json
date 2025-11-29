@@ -16,6 +16,7 @@
     "jose": "^6.1.0",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.547.0",
+    "multer": "^2.0.2",
     "next": "^15.5.5",
     "pdfjs-dist": "^5.1.91",
     "pg": "^8.16.3",
