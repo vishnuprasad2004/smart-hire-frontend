@@ -253,7 +253,7 @@ export default function FormBuilder() {
           >
             Create Form
           </button>
-          <div className="flex flex-row items-center gap-2"> <Info size={20}/><p className="text-sm font-medium text-neutral-700">As of now Smarthire doesn't support upadation of Application forms, hence these fields can't be edited later</p></div>
+          <div className="flex flex-row items-center gap-2"> <Info size={20}/><p className="text-sm font-medium text-neutral-700">As of now Smarthire doesn&apos;t support upadation of Application forms, hence these fields can&apos;t be edited later</p></div>
         </form>
       </div>
       <footer>
